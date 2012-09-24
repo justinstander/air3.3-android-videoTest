@@ -7,6 +7,8 @@ package
 	import flash.display.StageScaleMode;
 	import flash.events.Event;
 	import flash.events.NetStatusEvent;
+	import flash.geom.Rectangle;
+	import flash.media.StageVideo;
 	import flash.media.Video;
 	import flash.net.NetConnection;
 	import flash.net.NetStream;
@@ -22,7 +24,7 @@ package
 	 */
 	public class Main extends Sprite
 	{
-		private const VIDEO:String = "video.mp4";
+		private const VIDEO:String = "baileys_5sec.mp4";
 		
 		public function Main()
 		{
@@ -52,7 +54,7 @@ package
 			textField.text = NativeApplication.nativeApplication.runtimeVersion;
 			var format:TextFormat = textField.getTextFormat();
 			format.size = 50;
-			format.color = 0xFFFFFF;
+			format.color = 0xFF0000;
 			textField.setTextFormat(format);
 			addChild(textField);
 			
@@ -69,16 +71,28 @@ package
 							switch(event.info.code)
 							{
 								case "NetStream.Play.Stop":
-									stream.play(VIDEO);
+									stream.seek(0);
 									break;
 							}
 							trace(event.info.code);
 						});
-						var video:Video = new Video(
-							Screen.mainScreen.bounds.width,
-							Screen.mainScreen.bounds.height);
-						video.attachNetStream(stream);
-						addChild(video);
+						
+						if( stage.stageVideos.length > 0 )
+						{
+							trace("Using Stage Video");
+							var video:StageVideo = stage.stageVideos[0];
+							video.viewPort = new Rectangle(0,0,1280,720);
+							video.attachNetStream(stream);
+						}
+						else
+						{
+							trace("Default Video");
+							var cpu:Video = new Video(
+								Screen.mainScreen.bounds.width,
+								Screen.mainScreen.bounds.height);
+							cpu.attachNetStream(stream);
+							addChild(cpu);
+						}
 						stream.play(VIDEO);
 						break;
 					default:
