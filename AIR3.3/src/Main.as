@@ -1,6 +1,7 @@
 package
 {
 	import flash.desktop.NativeApplication;
+	import flash.desktop.SystemIdleMode;
 	import flash.display.Screen;
 	import flash.display.Sprite;
 	import flash.display.StageAlign;
@@ -49,6 +50,8 @@ package
 		
 		private function init():void
 		{
+			NativeApplication.nativeApplication.systemIdleMode = SystemIdleMode.KEEP_AWAKE;
+			
 			var textField:TextField = new TextField();
 			textField.autoSize = TextFieldAutoSize.LEFT;
 			textField.text = NativeApplication.nativeApplication.runtimeVersion;
