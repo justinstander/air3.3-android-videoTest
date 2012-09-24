@@ -82,7 +82,7 @@ package
 							trace("Using Stage Video");
 							textField.appendText(" Stage Video");
 							var video:StageVideo = stage.stageVideos[0];
-							video.viewPort = new Rectangle(0,0,1280,720);
+							video.viewPort = new Rectangle(0,0,Screen.mainScreen.bounds.width,Screen.mainScreen.bounds.height);
 							video.attachNetStream(stream);
 						}
 						else
@@ -93,7 +93,7 @@ package
 								Screen.mainScreen.bounds.width,
 								Screen.mainScreen.bounds.height);
 							cpu.attachNetStream(stream);
-							addChild(cpu);
+							addChildAt(cpu,0);
 						}
 						stream.play(VIDEO);
 						break;
@@ -116,7 +116,16 @@ package
 			var frameRate:TextField = new TextField();
 			var enterFrameHandler:Function = function(event:Event):void
 			{
-				frameRate.text = stage.frameRate.toString();
+				trace(stage.loaderInfo);
+				try
+				{
+					frameRate.text = stage.loaderInfo.frameRate.toString();
+				}
+				catch(e:Error)
+				{
+					frameRate.text = "-1";
+				}
+				
 				frameRate.appendText(" fps");
 				
 				var format:TextFormat = frameRate.getTextFormat();
@@ -125,7 +134,7 @@ package
 				frameRate.setTextFormat(format);
 				format = null;
 				
-				frameRate.y = Screen.mainScreen.bounds.height - frameRate.height;
+				frameRate.y = Screen.mainScreen.bounds.height - frameRate.height;	
 			};
 			frameRate.autoSize = TextFieldAutoSize.LEFT;
 			

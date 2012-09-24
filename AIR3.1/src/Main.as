@@ -24,7 +24,7 @@ package
 	 */
 	public class Main extends Sprite
 	{
-		private const VIDEO:String = "baileys_5sec.mp4";
+		private const VIDEO:String = "video-2012-02-07-08-59-24_1.mp4";
 		
 		public function Main()
 		{
@@ -80,18 +80,20 @@ package
 						if( stage.stageVideos.length > 0 )
 						{
 							trace("Using Stage Video");
+							textField.appendText(" Stage Video");
 							var video:StageVideo = stage.stageVideos[0];
-							video.viewPort = new Rectangle(0,0,1280,720);
+							video.viewPort = new Rectangle(0,0,Screen.mainScreen.bounds.width,Screen.mainScreen.bounds.height);
 							video.attachNetStream(stream);
 						}
 						else
 						{
 							trace("Default Video");
+							textField.appendText(" CPU");
 							var cpu:Video = new Video(
 								Screen.mainScreen.bounds.width,
 								Screen.mainScreen.bounds.height);
 							cpu.attachNetStream(stream);
-							addChild(cpu);
+							addChildAt(cpu,0);
 						}
 						stream.play(VIDEO);
 						break;
@@ -110,6 +112,35 @@ package
 		{
 			stage.scaleMode = StageScaleMode.NO_SCALE;
 			stage.align = StageAlign.TOP_LEFT;
+			
+			var frameRate:TextField = new TextField();
+			var enterFrameHandler:Function = function(event:Event):void
+			{
+				trace(stage.loaderInfo);
+				try
+				{
+					frameRate.text = stage.loaderInfo.frameRate.toString();
+				}
+				catch(e:Error)
+				{
+					frameRate.text = "-1";
+				}
+				
+				frameRate.appendText(" fps");
+				
+				var format:TextFormat = frameRate.getTextFormat();
+				format.size = 50;
+				format.color = 0xFF0000;
+				frameRate.setTextFormat(format);
+				format = null;
+				
+				frameRate.y = Screen.mainScreen.bounds.height - frameRate.height;	
+			};
+			frameRate.autoSize = TextFieldAutoSize.LEFT;
+			
+			addChild(frameRate);
+			
+			addEventListener(Event.ENTER_FRAME,enterFrameHandler);
 		}
 	}
 }
